@@ -35,7 +35,7 @@ in a variety of ways. (e.g. with sbt, natively, or as docker container)
 
 ### Build
 ```bash
-sbt clean assembly
+sbt clean test assembly
 ```
 ### SBT Run
 ```bash

@@ -1,5 +1,7 @@
 package org.parser.combinator.example
 
+import java.math.MathContext
+
 import cats.effect.IO
 import org.http4s.{HttpService, Request, Response, Status, _}
 import org.scalatest.{FlatSpec, Matchers}
@@ -20,7 +22,7 @@ class UnitsServiceSpec extends FlatSpec with Matchers {
     val request = Request[IO](Method.GET, uri = Uri.uri("/units/si?units=(degree/min)"))
     val actualResponse = unpackJsonResponse(service(request).value.unsafeRunSync().get)
     val expectedResponse = Json.obj("unit_name" -> "(rad/s)".asJson,
-    "multiplication_factor" -> Json.fromBigDecimal((Degree.multFactor() / Minute.multFactor()).setScale(14, BigDecimal.RoundingMode.HALF_DOWN)))
+    "multiplication_factor" -> Json.fromBigDecimal((Degree.multFactor() / Minute.multFactor())((new MathContext(14)))))
     actualResponse shouldBe expectedResponse
   }
 
@@ -29,7 +31,7 @@ class UnitsServiceSpec extends FlatSpec with Matchers {
     val request = Request[IO](Method.GET, uri = Uri.uri("/units/si?units=(degree/(minute*hectare))"))
     val actualResponse = unpackJsonResponse(service(request).value.unsafeRunSync().get)
     val expectedResponse = Json.obj("unit_name" -> "(rad/(s*m^2))".asJson,
-      "multiplication_factor" -> Json.fromBigDecimal((Degree.multFactor() / (Minute.multFactor() * Hectare.multFactor())).setScale(14, BigDecimal.RoundingMode.HALF_DOWN)))
+      "multiplication_factor" -> Json.fromBigDecimal((Degree.multFactor() / (Minute.multFactor() * Hectare.multFactor()))(new MathContext(14))))
     actualResponse shouldBe expectedResponse
   }
 
@@ -38,7 +40,7 @@ class UnitsServiceSpec extends FlatSpec with Matchers {
     val request = Request[IO](Method.GET, uri = Uri.uri("/units/si?units=(day*day*day)"))
     val actualResponse = unpackJsonResponse(service(request).value.unsafeRunSync().get)
     val expectedResponse = Json.obj("unit_name" -> "(s*s*s)".asJson,
-      "multiplication_factor" -> Json.fromBigDecimal((Day.multFactor() * Day.multFactor() * Day.multFactor()).setScale(14, BigDecimal.RoundingMode.HALF_DOWN)))
+      "multiplication_factor" -> Json.fromBigDecimal((Day.multFactor() * Day.multFactor() * Day.multFactor())(new MathContext(14))))
     actualResponse shouldBe expectedResponse
   }
 
