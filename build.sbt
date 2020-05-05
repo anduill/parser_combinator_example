@@ -1,7 +1,7 @@
 name := "parser_combinator_example"
 version := "0.1.0-SNAPSHOT"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.11"
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-Ypartial-unification")
 
